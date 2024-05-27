@@ -1,0 +1,124 @@
+// Libro.java
+public class Libro {
+    private String titulo;
+    private String autor;
+    private String nombre;
+    private int año;
+
+    public Libro(String titulo, String autor, String nombre, int año) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.nombre = nombre;
+        this.año = año;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public int getAño() {
+        return año;
+    }
+
+    @Override
+    public String toString() {
+        return "Título: " + titulo + ", Autor: " + autor + ", Nombre: " + nombre + ", Año: " + año;
+    }
+}
+
+// BibliotecaVista.java
+import java.util.List;
+import java.util.Scanner;
+
+public class BibliotecaVista {
+    private Scanner scanner;
+
+    public BibliotecaVista() {
+        scanner = new Scanner(System.in);
+    }
+
+    public int obtenerOpcionMenuPrincipal() {
+        System.out.println("1. Agregar Libro");
+        System.out.println("2. Mostrar Libros");
+        System.out.println("3. Salir");
+        System.out.print("Elige una opción: ");
+        return scanner.nextInt();
+    }
+
+    public Libro obtenerDetallesLibro() {
+        System.out.print("Ingresa el título del libro: ");
+        String titulo = scanner.next();
+        System.out.print("Ingresa el autor del libro: ");
+        String autor = scanner.next();
+        System.out.print("Ingresa tu nombre: ");
+        String nombre = scanner.next();
+        System.out.print("Ingresa el año de publicación: ");
+        int año = scanner.nextInt();
+        return new Libro(titulo, autor, nombre, año);
+    }
+
+    public void mostrarLibros(List<Libro> libros) {
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros en la biblioteca.");
+        } else {
+            for (Libro libro : libros) {
+                System.out.println(libro);
+            }
+        }
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        System.out.println(mensaje);
+    }
+}
+// BibliotecaControlador.java
+public class BibliotecaControlador {
+    private Biblioteca biblioteca;
+    private BibliotecaVista vista;
+
+    public BibliotecaControlador(Biblioteca biblioteca, BibliotecaVista vista) {
+        this.biblioteca = biblioteca;
+        this.vista = vista;
+    }
+
+    public void iniciar() {
+        boolean ejecutando = true;
+        while (ejecutando) {
+            int opcion = vista.obtenerOpcionMenuPrincipal();
+            switch (opcion) {
+                case 1:
+                    Libro nuevoLibro = vista.obtenerDetallesLibro();
+                    biblioteca.agregarLibro(nuevoLibro);
+                    vista.mostrarMensaje("¡Libro agregado exitosamente!");
+                    break;
+                case 2:
+                    vista.mostrarLibros(biblioteca.getLibros());
+                    break;
+                case 3:
+                    ejecutando = false;
+                    vista.mostrarMensaje("Saliendo de la aplicación de la biblioteca.");
+                    break;
+                default:
+                    vista.mostrarMensaje("Opción inválida. Por favor, intenta nuevamente.");
+            }
+        }
+    }
+}
+// Principal.java
+public class Principal {
+    public static void main(String[] args) {
+        Biblioteca biblioteca = new Biblioteca();
+        BibliotecaVista vista = new BibliotecaVista();
+        BibliotecaControlador controlador = new BibliotecaControlador(biblioteca, vista);
+        controlador.iniciar();
+    }
+}
+
